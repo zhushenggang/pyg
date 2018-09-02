@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="plugins/angularjs/angular.min.js"></script>
+    <script type="text/javascript">
+
+        //定义一个模块
+        var app = angular.module("pyg", []);
+
+        //定义模块函数
+        app.controller("helloController", function ($scope, $interval) {
+
+            $scope.seconds = 10;
+            //$interval
+            time = $interval(function () {
+                if ($scope.seconds > 0) {
+                    $scope.seconds = $scope.seconds - 1;
+                } else {
+                    $interval.cancel(time);
+                }
+            }, 1000);
+
+
+        })
+
+
+    </script>
+</head>
+<body ng-app="pyg">
+<div ng-controller="helloController">
+    hello , {{seconds}}
+</div>
+</body>
+</html>

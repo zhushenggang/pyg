@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <!--把activeMQ交给spring管理-->
+    <bean id="targetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <constructor-arg name="brokerURL" value="tcp://192.168.66.66:61616"></constructor-arg>
+    </bean>
+
+    <!--创建spring jms 提高工厂对象，管理activeMQ消息服务器-->
+    <bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+        <property name="targetConnectionFactory" ref="targetConnectionFactory"></property>
+    </bean>
+
+    <!--创建spring jms提供模板对象，发送消息-->
+    <bean class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="connectionFactory"></property>
+    </bean>
+
+    <!--创建发送消息目的地：点对点模式-->
+    <!--  <bean id="queue" class="org.apache.activemq.command.ActiveMQQueue">
+          <constructor-arg value="oneQueue"></constructor-arg>
+      </bean>-->
+    <!--删除索引库发送消息目的地-->
+    <bean id="deleteDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="solr_index_delete"></constructor-arg>
+    </bean>
+
+    <!--创建发送消息目的地：发布订阅模式-->
+    <bean id="index_html" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg value="index_html_topic"></constructor-arg>
+    </bean>
+
+</beans>

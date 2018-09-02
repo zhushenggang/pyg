@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="plugins/angularjs/angular.min.js"></script>
+    <script type="text/javascript">
+
+        //angularJS mvc设计模式
+        //模型：数据
+        //视图：页面，肉眼能看见的都是视图（html,指令）
+        //控制：函数（function）
+
+        //$scope是angularJS全局域对象，用来存储值，或者函数，或者变量
+        //相当于java代码中request对象，application对象
+        function helloController($scope) {
+            return $scope.greetings = {
+                text: "wellcome to anglarjS" // model
+            }
+        }
+
+    </script>
+</head>
+<body ng-app>
+<div ng-controller="helloController">
+    hello , {{greetings.text}}
+</div>
+</body>
+</html>

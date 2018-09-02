@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="plugins/angularjs/angular.min.js"></script>
+    <script type="text/javascript">
+
+        //定义一个模块
+        var app = angular.module("pyg", []);
+
+        //定义模块函数
+        app.controller("brandController", function ($scope) {
+
+            //定义数组
+            $scope.list = [99,100,1000,10000];
+
+        })
+
+
+    </script>
+</head>
+<body ng-app="pyg" ng-controller="brandController">
+    <ul>
+        <li ng-repeat="arr in list">
+            {{arr}}
+        </li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="plugins/angularjs/angular.min.js"></script>
+    <script type="text/javascript">
+        //$scope是angularJS全局域对象，用来存储值，或者函数，或者变量
+        //相当于java代码中request对象，application对象
+        function helloController($scope) {
+            return $scope.greetings = {
+                text: "wellcome to anglarjS"
+            }
+        }
+
+        function oneController($scope) {
+            return $scope.user = {
+                name: "小明"
+            }
+        }
+
+
+    </script>
+</head>
+<body ng-app>
+<div ng-controller="helloController">
+    hello , {{greetings.text}}
+</div>
+<div ng-controller="oneController">
+    你好，{{user.name}}
+</div>
+外部显示：{{user.name}}
+</body>
+</html>

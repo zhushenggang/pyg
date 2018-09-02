@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pyg.mapper.BrandMapper" >
+
+    <sql id="sql_column">
+        id,name,first_char firstChar
+    </sql>
+
+    <select id="findAll" resultType="tbBrand">
+        select <include refid="sql_column"></include> from tb_brand
+    </select>
+
+    <select id="findOne" parameterType="long" resultType="tbBrand">
+        select <include refid="sql_column"></include> from tb_brand where id=#{id}
+    </select>
+
+    <!--查询品牌数据-->
+    <insert id="insert" parameterType="tbBrand">
+        insert into tb_brand values(#{id},#{name},#{firstChar})
+    </insert>
+
+    <!--修改品牌数据-->
+    <update id="update" parameterType="tbBrand">
+        update tb_brand set name=#{name},
+                            first_char = #{firstChar}
+                            where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from tb_brand where id=#{id}
+    </delete>
+
+    <!--查询品牌下拉列表-->
+    <select id="findBrandList" resultType="map">
+        select id,name text from tb_brand
+    </select>
+
+</mapper>
