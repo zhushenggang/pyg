@@ -4,10 +4,11 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.pyg.mapper.TbOrderItemMapper;
+import com.pyg.mapper.TbOrderMapper;
+import com.pyg.pojo.*;
 import com.pyg.user.service.UserService;
 import com.pyg.mapper.TbUserMapper;
-import com.pyg.pojo.TbUser;
-import com.pyg.pojo.TbUserExample;
 import com.pyg.pojo.TbUserExample.Criteria;
 import com.pyg.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -176,6 +177,7 @@ public class UserServiceImpl implements UserService {
 	 * 3，设置过期时间 5分钟
 	 * 4，发送消息
 	 */
+	@Override
 	public void getSmsCode(String phone) {
 
 		try {
@@ -211,6 +213,7 @@ public class UserServiceImpl implements UserService {
 	/**
 	 * 需求：验证验证码是否匹配
 	 */
+	@Override
 	public boolean checkCode(String phone, String smsCode) {
 		//获取redis服务器验证码
 		Long code = (Long) redisTemplate.boundHashOps("smsCode").get(phone);
@@ -218,6 +221,33 @@ public class UserServiceImpl implements UserService {
 			return  true;
 		}
 		return false;
+	}
+
+	@Autowired
+	private TbOrderMapper tbOrderMapper;
+
+	@Autowired
+	private TbOrderItemMapper tbOrderItemMapper;
+	/**
+	 * 查询 用户 订单
+	 */
+	@Override
+	public List<TbOrder> findOrderList(String name) {
+
+		TbOrderExample example = new TbOrderExample();
+		TbOrderExample.Criteria criteria = example.createCriteria();
+		criteria.andUserIdEqualTo(name);
+		List<TbOrder> orderList = tbOrderMapper.selectByExample(example);
+
+		TbOrderItemExample example1 = new TbOrderItemExample();
+		for (TbOrder tbOrder : orderList) {
+			TbOrderItemExample.Criteria criteria1 = example1.createCriteria();
+			criteria1.andOrderIdEqualTo(tbOrder.getOrderId());
+			List<TbOrderItem> orderItems = tbOrderItemMapper.selectByExample(example1);
+			tbOrder.setTbOrderItemList(orderItems);
+		}
+
+		return orderList;
 	}
 
 }

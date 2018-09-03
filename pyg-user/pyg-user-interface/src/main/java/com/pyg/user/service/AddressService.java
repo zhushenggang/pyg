@@ -1,8 +1,6 @@
 package com.pyg.user.service;
 import java.util.List;
-
-import com.pyg.pojo.TbOrder;
-import com.pyg.pojo.TbUser;
+import com.pyg.pojo.TbAddress;
 
 import com.pyg.utils.PageResult;
 /**
@@ -10,13 +8,14 @@ import com.pyg.utils.PageResult;
  * @author Administrator
  *
  */
-public interface UserService {
+public interface AddressService {
 
 	/**
 	 * 返回全部列表
 	 * @return
+	 * @param user
 	 */
-	public List<TbUser> findAll();
+	public List<TbAddress> findAll(String user);
 	
 	
 	/**
@@ -29,13 +28,13 @@ public interface UserService {
 	/**
 	 * 增加
 	*/
-	public void add(TbUser user);
+	public void add(TbAddress address);
 	
 	
 	/**
 	 * 修改
 	 */
-	public void update(TbUser user);
+	public void update(TbAddress address);
 	
 
 	/**
@@ -43,7 +42,7 @@ public interface UserService {
 	 * @param id
 	 * @return
 	 */
-	public TbUser findOne(Long id);
+	public TbAddress findOne(Long id);
 	
 	
 	/**
@@ -58,17 +57,7 @@ public interface UserService {
 	 * @param pageSize 每页记录数
 	 * @return
 	 */
-	public PageResult findPage(TbUser user, int pageNum, int pageSize);
-	/**
-	 * 需求：获取短信验证码
-	 * 参数：手机号
-	 * 返回值：void
-	 */
-	public void getSmsCode(String phone);
-	/**
-	 * 需求：验证验证码是否匹配
-	 */
-	public boolean checkCode(String phone,String smsCode);
+	public PageResult findPage(TbAddress address, int pageNum, int pageSize);
 
-	List<TbOrder> findOrderList(String name);
+    void def(Long id, String isDefault);
 }
