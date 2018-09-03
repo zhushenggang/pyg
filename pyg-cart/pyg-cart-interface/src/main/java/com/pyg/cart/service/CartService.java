@@ -39,4 +39,9 @@ public interface CartService {
      * @return
      */
     List<Cart> mergeCart(List<Cart> redisCartList, List<Cart> cookieCartList);
+
+    /*
+    * 需求：查询购物车制定商品的信息
+    * */
+    List<Cart> findSelectItem(Long[] ids);
 }

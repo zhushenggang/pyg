@@ -40,7 +40,8 @@ public class CartController {
      * 6,购物车删除，数量修改，清空
      */
     @RequestMapping("addGoodsToCartList/{itemId}/{num}")
-    @CrossOrigin(origins = "http://item.pinyougou.com")
+    @CrossOrigin(origins = "http://www.pyg.com")
+
     public PygResult addGoodsToCartList(@PathVariable Long itemId,
                                         @PathVariable Integer num,
                                         HttpServletRequest request,
@@ -48,7 +49,7 @@ public class CartController {
 
         try {
             //获取用户登录信息
-            String username = request.getRemoteUser();
+            String username = "ZHJ";
             //1,查询购物车数据
             List<Cart> cartList = this.findCartList(request,response);
             //2,添加购物车数据，把新的商品添加购物车cartList购物车列表中
@@ -94,7 +95,8 @@ public class CartController {
     public List<Cart> findCartList(HttpServletRequest request,HttpServletResponse response) {
 
         //获取用户登录信息
-        String userId = request.getRemoteUser();
+        //String userId = request.getRemoteUser();
+        String userId = "ZHJ";
         //此时处于未登录
         //获取cookie购物车中购物车数据
         String cookie_cart = CookieUtil.getCookieValue(request, "cookie_cart", true);
@@ -132,12 +134,19 @@ public class CartController {
 
 
             }
-
             return redisCartList;
-
         }
 
+    }
 
+    /**
+     * 需求：根据购物车SKU的ID返回选定下单商品
+     */
+    @RequestMapping("/findSelectItem/{ids}")
+    public List<Cart> findSelectItem(@PathVariable Long[] ids){
+        //从redis中查询购物车数据
+        List<Cart> selectItem = cartService.findSelectItem(ids);
+        return selectItem;
     }
 
 }

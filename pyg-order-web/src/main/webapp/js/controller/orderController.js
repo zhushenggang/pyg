@@ -1,6 +1,8 @@
 //控制层
-app.controller('orderController', function ($scope, addressService, orderService) {
-
+app.controller('orderController', function ($scope,$location,$controller,addressService, orderService) {
+    //控制器继承
+    //把父控制器$scope传递给子控制器$scope
+    $controller("baseController",{$scope:$scope});
     //定义参数接受结构
     $scope.entity = {address:{},orders:{}};
 
@@ -52,14 +54,16 @@ app.controller('orderController', function ($scope, addressService, orderService
 
     //定义方法查询购物车送货清单
     $scope.findOrderCartList = function () {
-        orderService.findOrderCartList().success(function (data) {
+        //接受静态页面参数
+        $scope.selectIds = $location.search()['ids'];
+        orderService.findOrderCartList($scope.selectIds).success(function (data) {
             $scope.cartList = data;
             //计算总价格，商品数量
             $scope.totalValue = orderService.sum( $scope.cartList);
 
             //订单支付金额
             $scope.entity.orders.payment = $scope.totalValue.totalPrice;
-
+            $scope.selectIds = [];
         })
     };
     
@@ -78,11 +82,14 @@ app.controller('orderController', function ($scope, addressService, orderService
         orderService.submitOrder($scope.entity).success(function (data) {
             //判断
             if(data.success){
-                location.href = "http://localhost:8088/pay.html";
+                var orderId = data.message;
+                location.href = "http://localhost:8088/pay.html#?orderId="+orderId;
             }else{
                 alert(data.message);
             }
         })
     }
+
+
 
 });	

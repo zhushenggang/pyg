@@ -3,18 +3,19 @@ package com.pyg.pay.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.pyg.mapper.TbOrderMapper;
+import com.pyg.mapper.TbPayLogMapper;
 import com.pyg.pay.service.PayService;
 import com.pyg.pojo.TbOrder;
 import com.pyg.pojo.TbOrderExample;
+import com.pyg.pojo.TbPayLog;
+import com.pyg.pojo.TbPayLogExample;
 import com.pyg.utils.HttpClient;
 import com.pyg.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by on 2018/8/29.
@@ -59,6 +60,7 @@ public class PayServiceImpl implements PayService {
             TbOrderExample.Criteria criteria = example.createCriteria();
             //设置参数
             criteria.andUserIdEqualTo(username);
+            criteria.andStatusEqualTo("1");
             //执行查询
             List<TbOrder> orderList = orderMapper.selectByExample(example);
             //准备支付金额
@@ -80,7 +82,7 @@ public class PayServiceImpl implements PayService {
             maps.put("nonce_str", WXPayUtil.generateNonceStr());
             maps.put("body","品优购");
             maps.put("out_trade_no",payOrderId);
-            maps.put("total_fee","1");
+            maps.put("total_fee",payment+"");
             maps.put("notify_url",notifyurl);
             maps.put("trade_type","NATIVE");
             maps.put("spbill_create_ip","127.0.0.1");
@@ -158,5 +160,57 @@ public class PayServiceImpl implements PayService {
 
 
         return null;
+    }
+
+    @Autowired
+    private TbPayLogMapper logMapper;
+
+
+    /*
+    * 交易日志
+    * */
+    @Override
+    public void findByOutTradeNo(Long outTradeNo,Long totalFee,String orderId) {
+        TbPayLog payLog = new TbPayLog();
+        //设置支付订单号
+        payLog.setOutTradeNo(outTradeNo+"");
+        //设置创建日期
+        payLog.setCreateTime(new Date());
+        //设置支付金额
+        payLog.setTotalFee(totalFee);
+        //设置用户ID
+        //String username = request.getRemoteUser();
+        payLog.setUserId("ZHJ");
+        //设置交易号码
+        payLog.setTransactionId(outTradeNo+"".substring(7)+new Random().nextInt(2000000)+"");
+        //设置完成时间
+        payLog.setPayTime(new Date());
+        //设置交易状态
+        payLog.setTradeState("1");
+        //设置编号列表
+        TbOrderExample example = new TbOrderExample();
+        TbOrderExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo("2");
+        List<TbOrder> tbOrders = orderMapper.selectByExample(example);
+
+        ArrayList<String> orderIdList = new ArrayList<>();
+        for (TbOrder tbOrder : tbOrders) {
+            orderIdList.add(tbOrder.getOrderId()+"");
+        }
+        payLog.setOrderList(tbOrders.toString());
+        //设置支付类型
+
+        logMapper.insert(payLog);
+    }
+
+    /*
+    * 更改订单支付状态
+    * */
+    @Override
+    public void updateStatus(String orderId) {
+        TbOrder order = new TbOrder();
+        order.setStatus("2");
+        order.setOrderId(Long.parseLong(orderId));
+        orderMapper.updateByPrimaryKeySelective(order);
     }
 }

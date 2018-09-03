@@ -1,5 +1,8 @@
 //控制层
-app.controller('cartController', function ($scope, cartService) {
+app.controller('cartController', function ($scope,$controller,cartService) {
+    //控制器继承
+    //把父控制器$scope传递给子控制器$scope
+    $controller("baseController",{$scope:$scope});
 
     //查询购物车 List<Cart>
     $scope.findCartList = function () {
@@ -22,5 +25,25 @@ app.controller('cartController', function ($scope, cartService) {
             }
         })
     }
+
+    //
+    $scope.closeFee = function () {
+        if ($scope.selectIds != null && $scope.selectIds.length >0){
+            location.href="http://localhost:8087/getOrderInfo.html#?ids="+$scope.selectIds;
+            //window.location.reload(true);
+        }else {
+            alert("请选择需要结算的商品");
+        }
+    }
+/*
+    $scope.selectAll=true;
+    $scope.all = function () {
+        $scope.all=function (m) {
+            for (var i =0;i<$scope)
+        }
+    }
+*/
+
+
 
 });	

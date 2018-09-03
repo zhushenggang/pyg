@@ -16,8 +16,10 @@ import com.pyg.utils.IdWorker;
 import com.pyg.utils.PageResult;
 import com.pyg.vo.Cart;
 import com.pyg.vo.OrderInfo;
+import com.sun.tools.javac.util.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -169,7 +171,7 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param orderInfo
      */
-    public void submitOrder(OrderInfo orderInfo, List<Cart> redisCartList) {
+    public ArrayList<Long> submitOrder(OrderInfo orderInfo, List<Cart> redisCartList) {
 
         //更新地址对象
         //获取地址对象
@@ -177,6 +179,7 @@ public class OrderServiceImpl implements OrderService {
         //更新
         addressMapper.updateByPrimaryKeySelective(address);
 
+        ArrayList<Long> orderIdlist = new ArrayList<>();
         //循环购物清单
         //一个商家一个订单
         for (Cart cart : redisCartList) {
@@ -184,8 +187,10 @@ public class OrderServiceImpl implements OrderService {
             TbOrder orders = orderInfo.getOrders();
             orders.setSellerId(cart.getSellerId());
             //订单id,必须设置，不能重复
-            long orderId = idWorker.nextId();
+            Long orderId = idWorker.nextId();
             orders.setOrderId(orderId);
+            //添加到订单ID列表
+            orderIdlist.add(orderId);
             //免邮费
             orders.setPostFee("0");
             //状态：1、未付款，2、已付款，3、未发货，4、已发货，5、交易成功，6、交易关闭,7、待评价
@@ -218,11 +223,12 @@ public class OrderServiceImpl implements OrderService {
                 //保存
                 orderItemMapper.insertSelective(orderItem);
 
+
             }
 
 
         }
-
+        return orderIdlist;
 
     }
 

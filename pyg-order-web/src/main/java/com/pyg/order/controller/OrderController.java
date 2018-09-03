@@ -1,12 +1,12 @@
 package com.pyg.order.controller;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.pyg.cart.service.CartService;
 import com.pyg.vo.Cart;
 import com.pyg.vo.OrderInfo;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.annotation.Order;
+import org.springframework.web.bind.annotation.*;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pyg.pojo.TbOrder;
 import com.pyg.order.service.OrderService;
@@ -127,15 +127,29 @@ public class OrderController {
 	 * 参数：request
 	 * 返回值：List<Cart>
 	 */
-	@RequestMapping("findOrderCartList")
+
+	@RequestMapping("findOrderCartList/{ids}")
+	@CrossOrigin(origins = "http://localhost")
+	public List<Cart> findOrderCartList(@PathVariable Long[] ids ,HttpServletRequest request){
+		//获取用户登录名
+		//String username = request.getRemoteUser();
+		String username = "ZHJ";
+		//根据用户名查询用户购物车数据
+		List<Cart> cartList = cartService.findSelectItem(ids);
+
+		return cartList;
+	}
+/*	@RequestMapping("findOrderCartList")
+	@CrossOrigin(origins = "http://localhost")
 	public List<Cart> findOrderCartList(HttpServletRequest request){
 		//获取用户登录名
-		String username = request.getRemoteUser();
+		//String username = request.getRemoteUser();
+		String username = "ZHJ";
 		//根据用户名查询用户购物车数据
 		List<Cart> cartList = cartService.findRedisCartList(username);
 
 		return cartList;
-	}
+	}*/
 
 	/**
 	 * 需求：提交订单
@@ -146,7 +160,8 @@ public class OrderController {
 	public PygResult submitOrder(@RequestBody OrderInfo orderInfo,HttpServletRequest request){
 		try {
 			//获取当前用户登录信息
-			String username = request.getRemoteUser();
+			//String username = request.getRemoteUser();
+			String username = "ZHJ";
 
 			//给订单设置用户
 			orderInfo.getOrders().setUserId(username);
@@ -154,8 +169,11 @@ public class OrderController {
 			//获取购物车购物清单
 			List<Cart> redisCartList = cartService.findRedisCartList(username);
 			//调用服务方法，实现订单提交
-			orderService.submitOrder(orderInfo,redisCartList);
-			return new PygResult(true,"提交成功");
+            ArrayList<Long> orderIdList = orderService.submitOrder(orderInfo, redisCartList);
+
+            String orderIds = orderIdList.toString();
+
+            return new PygResult(true,orderIds);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return  new PygResult(false,"提交失败");

@@ -19,4 +19,15 @@ public interface PayService {
      * 返回值：PygResult
      */
     Map queryPayStatus(String out_trade_no);
+
+
+    /*
+    * 根据订单号查询该订单的商品
+    * */
+    void findByOutTradeNo(Long outTradeNo,Long totalFee,String orderId);
+
+    /*
+    * 交易成功，更改订单状态
+    * */
+    void updateStatus(String orderId);
 }
