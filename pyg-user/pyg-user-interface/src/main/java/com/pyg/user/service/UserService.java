@@ -1,8 +1,11 @@
 package com.pyg.user.service;
 import java.util.List;
+
 import com.pyg.pojo.TbUser;
 
 import com.pyg.utils.PageResult;
+import com.pyg.utils.PygResult;
+
 /**
  * 服务层接口
  * @author Administrator
@@ -67,5 +70,9 @@ public interface UserService {
 	 * 需求：验证验证码是否匹配
 	 */
 	public boolean checkCode(String phone,String smsCode);
-	
+
+
+    void saveUserInfo(TbUser user);
+
+    PygResult changepwd(String username,String oldpwd, String newpwd);
 }

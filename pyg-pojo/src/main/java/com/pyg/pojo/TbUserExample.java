@@ -1554,6 +1554,146 @@ public class TbUserExample {
             addCriterion("last_login_time not between", value1, value2, "lastLoginTime");
             return (Criteria) this;
         }
+
+        public Criteria andDizhiIsNull() {
+            addCriterion("dizhi is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDizhiIsNotNull() {
+            addCriterion("dizhi is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDizhiEqualTo(String value) {
+            addCriterion("dizhi =", value, "dizhi");
+            return (Criteria) this;
+        }
+
+        public Criteria andDizhiNotEqualTo(String value) {
+            addCriterion("dizhi <>", value, "dizhi");
+            return (Criteria) this;
+        }
+
+        public Criteria andDizhiGreaterThan(String value) {
+            addCriterion("dizhi >", value, "dizhi");
+            return (Criteria) this;
+        }
+
+        public Criteria andDizhiGreaterThanOrEqualTo(String value) {
+            addCriterion("dizhi >=", value, "dizhi");
+            return (Criteria) this;
+        }
+
+        public Criteria andDizhiLessThan(String value) {
+            addCriterion("dizhi <", value, "dizhi");
+            return (Criteria) this;
+        }
+
+        public Criteria andDizhiLessThanOrEqualTo(String value) {
+            addCriterion("dizhi <=", value, "dizhi");
+            return (Criteria) this;
+        }
+
+        public Criteria andDizhiLike(String value) {
+            addCriterion("dizhi like", value, "dizhi");
+            return (Criteria) this;
+        }
+
+        public Criteria andDizhiNotLike(String value) {
+            addCriterion("dizhi not like", value, "dizhi");
+            return (Criteria) this;
+        }
+
+        public Criteria andDizhiIn(List<String> values) {
+            addCriterion("dizhi in", values, "dizhi");
+            return (Criteria) this;
+        }
+
+        public Criteria andDizhiNotIn(List<String> values) {
+            addCriterion("dizhi not in", values, "dizhi");
+            return (Criteria) this;
+        }
+
+        public Criteria andDizhiBetween(String value1, String value2) {
+            addCriterion("dizhi between", value1, value2, "dizhi");
+            return (Criteria) this;
+        }
+
+        public Criteria andDizhiNotBetween(String value1, String value2) {
+            addCriterion("dizhi not between", value1, value2, "dizhi");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobIsNull() {
+            addCriterion("job is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobIsNotNull() {
+            addCriterion("job is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobEqualTo(String value) {
+            addCriterion("job =", value, "job");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobNotEqualTo(String value) {
+            addCriterion("job <>", value, "job");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobGreaterThan(String value) {
+            addCriterion("job >", value, "job");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobGreaterThanOrEqualTo(String value) {
+            addCriterion("job >=", value, "job");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobLessThan(String value) {
+            addCriterion("job <", value, "job");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobLessThanOrEqualTo(String value) {
+            addCriterion("job <=", value, "job");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobLike(String value) {
+            addCriterion("job like", value, "job");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobNotLike(String value) {
+            addCriterion("job not like", value, "job");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobIn(List<String> values) {
+            addCriterion("job in", values, "job");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobNotIn(List<String> values) {
+            addCriterion("job not in", values, "job");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobBetween(String value1, String value2) {
+            addCriterion("job between", value1, value2, "job");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobNotBetween(String value1, String value2) {
+            addCriterion("job not between", value1, value2, "job");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

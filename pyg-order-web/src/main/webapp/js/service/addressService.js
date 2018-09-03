@@ -5,4 +5,8 @@ app.service('addressService',function($http){
 	this.findAddressList=function(){
 		return $http.get('../address/findAddressList');
 	}
+	
+	this.add = function (entity) {
+		return $http.post("../address/add",entity);
+    }
 });

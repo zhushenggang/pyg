@@ -10,4 +10,11 @@ app.service('userService',function($http){
         return $http.get("../user/getSmsCode/"+phone);
     }
 
+    this.saveUserInfo = function (UserInfo) {
+        return $http.post("../user/saveUserInfo",UserInfo);
+    }
+
+    this.changepwd = function (oldpwd, newpwd) {
+        return $http.get("../user/changepwd/"+oldpwd+"/"+newpwd);
+    };
 });

@@ -1,5 +1,7 @@
 package com.pyg.pojo;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -44,9 +46,14 @@ public class TbUser implements Serializable{
 
     private Integer experienceValue;
 
+
     private Date birthday;
 
     private Date lastLoginTime;
+
+    private String dizhi;
+
+    private String job;
 
     public Long getId() {
         return id;
@@ -222,5 +229,21 @@ public class TbUser implements Serializable{
 
     public void setLastLoginTime(Date lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
+    }
+
+    public String getDizhi() {
+        return dizhi;
+    }
+
+    public void setDizhi(String dizhi) {
+        this.dizhi = dizhi == null ? null : dizhi.trim();
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job == null ? null : job.trim();
     }
 }
