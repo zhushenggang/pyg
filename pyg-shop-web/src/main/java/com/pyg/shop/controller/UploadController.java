@@ -34,7 +34,7 @@ public class UploadController {
             String extName = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
 
             //创建文件上传工具类对象
-            FastDFSClient fdfs = new FastDFSClient("classpath:conf/client.conf");
+            FastDFSClient fdfs = new FastDFSClient("D:\\pyg\\pyg-shop-web\\src\\main\\resources\\conf\\client.conf");
             //上传
             //返回地址：group1/M00/00/00/wKhCQ1qYzxmAX8LgAAlnNJued40320.png
             String url = fdfs.uploadFile(file.getBytes(), extName);

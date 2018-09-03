@@ -1,6 +1,8 @@
 package com.pyg.user.service;
 import java.util.List;
 
+import com.pyg.pojo.TbOrder;
+
 import com.pyg.pojo.TbUser;
 
 import com.pyg.utils.PageResult;
@@ -75,4 +77,6 @@ public interface UserService {
     void saveUserInfo(TbUser user);
 
     PygResult changepwd(String username,String oldpwd, String newpwd);
+
+	List<TbOrder> findOrderList(String name);
 }

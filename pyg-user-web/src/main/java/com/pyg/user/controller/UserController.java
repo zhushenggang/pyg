@@ -5,17 +5,18 @@ import com.pyg.order.service.AddressService;
 import com.pyg.pojo.TbAreas;
 import com.pyg.pojo.TbCities;
 import com.pyg.pojo.TbProvinces;
+import com.pyg.pojo.TbOrder;
 import com.pyg.pojo.TbUser;
 import com.pyg.user.service.UserService;
 import com.pyg.utils.PageResult;
 import com.pyg.utils.PhoneFormatCheckUtils;
 import com.pyg.utils.PygResult;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 /**
  * controller
@@ -31,7 +32,19 @@ public class UserController {
 
 	@Reference(timeout = 10000000)
 	private AddressService addressService;
-	
+
+
+
+	/**
+	 * 查询 用户 订单
+	 */
+	@RequestMapping("/findOrderSe")
+	public List<TbOrder> findOrderList(){
+
+		String name = SecurityContextHolder.getContext().getAuthentication().getName();
+		return userService.findOrderList(name);
+	}
+
 	/**
 	 * 返回全部列表
 	 * @return
@@ -40,24 +53,8 @@ public class UserController {
 	public List<TbUser> findAll(){			
 		return userService.findAll();
 	}
-
-
-	@RequestMapping("/findProvinceList")
-	public List<TbProvinces> findProvinceList(){
-		return addressService.findProvinceList();
-	}
-
-	@RequestMapping("/findtownList/{provinceId}")
-	public List<TbCities> findcityList(@PathVariable String provinceId){
-		return addressService.findcityList(provinceId);
-	}
-
-	@RequestMapping("/findtownList/{cityid}")
-	public List<TbAreas> findtownList(@PathVariable String cityid){
-		return addressService.findtownList(cityid);
-	}
-
-
+	
+	
 	/**
 	 * 返回全部列表
 	 * @return
@@ -162,32 +159,6 @@ public class UserController {
 			e.printStackTrace();
 			return new PygResult(false,"发送失败");
 		}
-	}
-
-	@RequestMapping("/saveUserInfo")
-	public PygResult saveUserInfo(@RequestBody TbUser user, HttpServletRequest request){
-		try {
-            String userName = request.getRemoteUser();
-            user.setUsername(userName);
-            userService.saveUserInfo(user);
-			return new PygResult(true,"增加成功");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new PygResult(true,"增加失败");
-		}
-	}
-
-	@RequestMapping("/changepwd/{oldpwd}/{newpwd}")
-	public PygResult changepwd(@PathVariable String oldpwd,@PathVariable String newpwd,HttpServletRequest request){
-        PygResult pygResult = null;
-        try {
-            String username = request.getRemoteUser();
-            pygResult = userService.changepwd(username,oldpwd,newpwd);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new PygResult(false,"修改失败");
-        }
-        return pygResult;
 	}
 	
 }
