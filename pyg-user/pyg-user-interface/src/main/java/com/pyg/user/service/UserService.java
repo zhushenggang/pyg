@@ -1,5 +1,7 @@
 package com.pyg.user.service;
 import java.util.List;
+
+import com.pyg.pojo.TbOrder;
 import com.pyg.pojo.TbUser;
 
 import com.pyg.utils.PageResult;
@@ -67,5 +69,6 @@ public interface UserService {
 	 * 需求：验证验证码是否匹配
 	 */
 	public boolean checkCode(String phone,String smsCode);
-	
+
+	List<TbOrder> findOrderList(String name);
 }

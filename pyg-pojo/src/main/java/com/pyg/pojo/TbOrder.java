@@ -3,6 +3,7 @@ package com.pyg.pojo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class TbOrder implements Serializable{
     private Long orderId;
@@ -54,6 +55,16 @@ public class TbOrder implements Serializable{
     private String sourceType;
 
     private String sellerId;
+
+    private List<TbOrderItem> tbOrderItemList;
+
+    public List<TbOrderItem> getTbOrderItemList() {
+        return tbOrderItemList;
+    }
+
+    public void setTbOrderItemList(List<TbOrderItem> tbOrderItemList) {
+        this.tbOrderItemList = tbOrderItemList;
+    }
 
     public Long getOrderId() {
         return orderId;

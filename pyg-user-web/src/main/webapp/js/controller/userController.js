@@ -1,6 +1,16 @@
 //控制层
 app.controller('userController', function ($scope, userService,loginService) {
 
+    $scope.orderStatus = ['未付款','待发货','确认收货'];
+    /**
+     * 查询 用户 订单
+     */
+    $scope.findOrderSe = function () {
+        userService.findOrderSe().success(function (data) {
+            $scope.orderList = data;
+        })
+    };
+
     //完成用户注册
     $scope.save = function () {
         //判断密码是否输入匹配
