@@ -68,5 +68,6 @@ public interface SellerService {
 	 * 3：关闭商家
 	 */
 	public void updateStatus(String sellerId,String status);
-	
+
+    public PygResult updatePassword(String id, String oldPwd, String newPwd, String reNewPwd) throws Exception;
 }

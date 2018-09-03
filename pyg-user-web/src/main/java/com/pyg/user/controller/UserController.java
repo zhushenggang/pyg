@@ -1,11 +1,13 @@
 package com.pyg.user.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.pyg.pojo.TbOrder;
 import com.pyg.pojo.TbUser;
 import com.pyg.user.service.UserService;
 import com.pyg.utils.PageResult;
 import com.pyg.utils.PhoneFormatCheckUtils;
 import com.pyg.utils.PygResult;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +25,18 @@ public class UserController {
 
 	@Reference(timeout = 10000000)
 	private UserService userService;
-	
+
+
+	/**
+	 * 查询 用户 订单
+	 */
+	@RequestMapping("/findOrderSe")
+	public List<TbOrder> findOrderList(){
+
+		String name = SecurityContextHolder.getContext().getAuthentication().getName();
+		return userService.findOrderList(name);
+	}
+
 	/**
 	 * 返回全部列表
 	 * @return

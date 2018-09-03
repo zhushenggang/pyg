@@ -5,12 +5,17 @@ import com.pyg.manager.service.SellerService;
 import com.pyg.pojo.TbSeller;
 import com.pyg.utils.PageResult;
 import com.pyg.utils.PygResult;
+import com.sun.org.apache.bcel.internal.generic.NEW;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * controller
@@ -81,12 +86,13 @@ public class SellerController {
 	
 	/**
 	 * 获取实体
-	 * @param id
+	 * @param
 	 * @return
 	 */
 	@RequestMapping("/findOne")
-	public TbSeller findOne(String id){
-		return sellerService.findOne(id);		
+	public TbSeller findOne(){
+		String id = SecurityContextHolder.getContext().getAuthentication().getName();
+		return sellerService.findOne(id);
 	}
 	
 	/**
@@ -107,7 +113,7 @@ public class SellerController {
 	
 		/**
 	 * 查询+分页
-	 * @param brand
+	 * @param seller
 	 * @param page
 	 * @param rows
 	 * @return
@@ -115,6 +121,23 @@ public class SellerController {
 	@RequestMapping("/search")
 	public PageResult search(@RequestBody TbSeller seller, int page, int rows  ){
 		return sellerService.findPage(seller, page, rows);		
+	}
+
+	/**
+	 * 修改密码
+	 */
+	@RequestMapping("/updatePassword/{oldPwd}/{newPwd}/{reNewPwd}")
+	public PygResult updatePassword(@PathVariable String oldPwd,@PathVariable String newPwd,@PathVariable String reNewPwd){
+		try {
+			//获取商家id
+			String id = SecurityContextHolder.getContext().getAuthentication().getName();
+			PygResult pygResult = sellerService.updatePassword(id, oldPwd, newPwd, reNewPwd);
+			return pygResult;
+		}catch (Exception e){
+			e.printStackTrace();
+			return new PygResult(false,"密码修改失败");
+		}
+
 	}
 	
 }

@@ -1,8 +1,5 @@
  //控制层 
-app.controller('sellerController' ,function($scope,$controller   ,sellerService){	
-	
-	$controller('baseController',{$scope:$scope});//继承
-	
+app.controller('sellerController' ,function($scope,sellerService){
     //读取列表数据绑定到表单中  
 	$scope.findAll=function(){
 		sellerService.findAll().success(
@@ -11,20 +8,10 @@ app.controller('sellerController' ,function($scope,$controller   ,sellerService)
 			}			
 		);
 	}    
-	
-	//分页
-	$scope.findPage=function(page,rows){			
-		sellerService.findPage(page,rows).success(
-			function(response){
-				$scope.list=response.rows;	
-				$scope.paginationConf.totalItems=response.total;//更新总记录数
-			}			
-		);
-	}
-	
+
 	//查询实体 
-	$scope.findOne=function(id){				
-		sellerService.findOne(id).success(
+	$scope.findOne=function(){
+		sellerService.findOne().success(
 			function(response){
 				$scope.entity= response;					
 			}
@@ -33,7 +20,7 @@ app.controller('sellerController' ,function($scope,$controller   ,sellerService)
 	
 	//保存 
 	$scope.save=function(){
-        sellerService.add( $scope.entity  ).success(
+        sellerService.add( $scope.entity).success(
 			function(response){
 				if(response.success){
 					//跳转到登录页面
@@ -43,32 +30,40 @@ app.controller('sellerController' ,function($scope,$controller   ,sellerService)
 				}
 			}		
 		);				
-	}
-	
-	 
-	//批量删除 
-	$scope.dele=function(){			
-		//获取选中的复选框			
-		sellerService.dele( $scope.selectIds ).success(
-			function(response){
-				if(response.success){
-					$scope.reloadList();//刷新列表
-					$scope.selectIds=[];
-				}						
-			}		
-		);				
-	}
-	
-	$scope.searchEntity={};//定义搜索对象 
-	
-	//搜索
-	$scope.search=function(page,rows){			
-		sellerService.search(page,rows,$scope.searchEntity).success(
-			function(response){
-				$scope.list=response.rows;	
-				$scope.paginationConf.totalItems=response.total;//更新总记录数
-			}			
-		);
-	}
-    
+	};
+
+
+	//修改资料
+	$scope.update=function () {
+		sellerService.update($scope.entity).success(function (data) {
+			if (data.success){
+				alert(data.message);
+                location.href="home.html";
+			}else {
+				alert(data.message);
+			}
+        })
+    };
+
+	//修改密码
+    $scope.updatePassword = function (oldPwd,newPwd,reNewPwd) {
+        if (newPwd==null || newPwd==""){
+            alert("新密码不能为空");
+            return;
+        }
+        if(reNewPwd != newPwd){
+            alert("两次密码不一样");
+            return;
+        }
+        sellerService.updatePassword(oldPwd,newPwd,reNewPwd).success(function (data) {
+			if (data.success){
+				alert(data.message);
+                location.href="/logout";
+			} else {
+                alert(data.message);
+                location.href="password.html";
+            }
+        })
+    }
+
 });	
