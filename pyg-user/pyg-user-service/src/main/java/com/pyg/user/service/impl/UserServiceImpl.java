@@ -11,10 +11,12 @@ import com.pyg.user.service.UserService;
 import com.pyg.mapper.TbUserMapper;
 import com.pyg.pojo.TbUserExample.Criteria;
 import com.pyg.utils.PageResult;
+import com.pyg.utils.PygResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.DigestUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -213,7 +215,6 @@ public class UserServiceImpl implements UserService {
 	/**
 	 * 需求：验证验证码是否匹配
 	 */
-	@Override
 	public boolean checkCode(String phone, String smsCode) {
 		//获取redis服务器验证码
 		Long code = (Long) redisTemplate.boundHashOps("smsCode").get(phone);
@@ -249,5 +250,45 @@ public class UserServiceImpl implements UserService {
 
 		return orderList;
 	}
+
+	@Override
+	public void saveUserInfo(TbUser user) {
+
+        TbUserExample example = new TbUserExample();
+        Criteria criteria = example.createCriteria();
+        criteria.andUsernameEqualTo(user.getUsername());
+
+        List<TbUser> tbUsers = userMapper.selectByExample(example);
+
+        for (TbUser tbUser : tbUsers) {
+            user.setId(tbUser.getId());
+            userMapper.updateByPrimaryKeySelective(user);
+        }
+
+
+        //userMapper.updateByExampleSelective(user,example);
+
+    }
+
+	@Override
+	public PygResult changepwd(String userName,String oldpwd, String newpwd) {
+		TbUserExample example = new TbUserExample();
+        Criteria criteria = example.createCriteria();
+        oldpwd = DigestUtils.md5DigestAsHex(oldpwd.getBytes());
+        criteria.andPasswordEqualTo(oldpwd);
+        criteria.andUsernameEqualTo(userName);
+        List<TbUser> tbUsers = userMapper.selectByExample(example);
+        if(tbUsers == null || tbUsers.size() == 0){
+            return new PygResult(true,"原密码错误");
+        }
+        TbUserExample example2 = new TbUserExample();
+        Criteria criteria1 = example2.createCriteria();
+        criteria1.andUsernameEqualTo(userName);
+        TbUser user = new TbUser();
+        user.setPassword(DigestUtils.md5DigestAsHex(newpwd.getBytes()));
+        userMapper.updateByExampleSelective(user,example2);
+        return new PygResult(true,"修改成功");
+	}
+
 
 }

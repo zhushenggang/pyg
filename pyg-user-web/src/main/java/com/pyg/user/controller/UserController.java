@@ -1,6 +1,10 @@
 package com.pyg.user.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.pyg.order.service.AddressService;
+import com.pyg.pojo.TbAreas;
+import com.pyg.pojo.TbCities;
+import com.pyg.pojo.TbProvinces;
 import com.pyg.pojo.TbOrder;
 import com.pyg.pojo.TbUser;
 import com.pyg.user.service.UserService;
@@ -25,6 +29,10 @@ public class UserController {
 
 	@Reference(timeout = 10000000)
 	private UserService userService;
+
+	@Reference(timeout = 10000000)
+	private AddressService addressService;
+
 
 
 	/**

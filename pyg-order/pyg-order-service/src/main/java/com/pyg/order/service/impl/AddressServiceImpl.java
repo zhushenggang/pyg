@@ -2,13 +2,15 @@ package com.pyg.order.service.impl;
 
 import java.util.List;
 
+import com.pyg.mapper.TbAreasMapper;
+import com.pyg.mapper.TbCitiesMapper;
+import com.pyg.mapper.TbProvincesMapper;
+import com.pyg.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.pyg.mapper.TbAddressMapper;
-import com.pyg.pojo.TbAddress;
-import com.pyg.pojo.TbAddressExample;
 import com.pyg.pojo.TbAddressExample.Criteria;
 import com.pyg.order.service.AddressService;
 
@@ -24,6 +26,15 @@ public class AddressServiceImpl implements AddressService {
 
     @Autowired
     private TbAddressMapper addressMapper;
+
+    @Autowired
+    private TbProvincesMapper provincesMapper;
+
+    @Autowired
+    private TbCitiesMapper citiesMapper;
+
+    @Autowired
+    private TbAreasMapper areasMapper;
 
     /**
      * 查询全部
@@ -48,6 +59,7 @@ public class AddressServiceImpl implements AddressService {
      */
     @Override
     public void add(TbAddress address) {
+        address.setIsDefault("0");
         addressMapper.insert(address);
     }
 
@@ -142,6 +154,30 @@ public class AddressServiceImpl implements AddressService {
         //执行查询
         List<TbAddress> addressList = addressMapper.selectByExample(example);
         return addressList;
+    }
+
+    @Override
+    public List<TbProvinces> findProvinceList() {
+        return provincesMapper.selectByExample(null);
+    }
+
+
+
+    @Override
+    public List<TbAreas> findtownList(String cityid) {
+        TbAreasExample example = new TbAreasExample();
+        TbAreasExample.Criteria criteria = example.createCriteria();
+        criteria.andCityidEqualTo(cityid);
+        List<TbAreas> areasList = areasMapper.selectByExample(example);
+        return areasList;
+    }
+
+    @Override
+    public List<TbCities> findcityList(String provinceId) {
+        TbCitiesExample example = new TbCitiesExample();
+        TbCitiesExample.Criteria criteria = example.createCriteria();
+        criteria.andProvinceidEqualTo(provinceId+"");
+        return citiesMapper.selectByExample(example);
     }
 
 }

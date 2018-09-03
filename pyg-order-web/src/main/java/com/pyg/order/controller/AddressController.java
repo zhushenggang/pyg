@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/address")
 public class AddressController {
 
-	@Reference
+	@Reference(timeout = 10000000)
 	private AddressService addressService;
 	
 	/**
@@ -51,9 +51,11 @@ public class AddressController {
 	 * @return
 	 */
 	@RequestMapping("/add")
-	public PygResult add(@RequestBody TbAddress address){
+	public PygResult add(@RequestBody TbAddress address,HttpServletRequest request){
 		try {
-			addressService.add(address);
+            String remoteUser = request.getRemoteUser();
+            address.setUserId(remoteUser);
+            addressService.add(address);
 			return new PygResult(true, "增加成功");
 		} catch (Exception e) {
 			e.printStackTrace();

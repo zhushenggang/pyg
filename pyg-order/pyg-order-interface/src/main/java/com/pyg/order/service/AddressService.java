@@ -2,6 +2,9 @@ package com.pyg.order.service;
 import java.util.List;
 import com.pyg.pojo.TbAddress;
 
+import com.pyg.pojo.TbAreas;
+import com.pyg.pojo.TbCities;
+import com.pyg.pojo.TbProvinces;
 import com.pyg.utils.PageResult;
 /**
  * 服务层接口
@@ -64,4 +67,11 @@ public interface AddressService {
 	 * @return
 	 */
     List<TbAddress> findAddressList(String username);
+
+    List<TbProvinces> findProvinceList();
+
+	List<TbCities> findcityList(String provinceId);
+
+	List<TbAreas> findtownList(String cityid);
+
 }

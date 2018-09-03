@@ -90,6 +90,24 @@ app.controller('orderController', function ($scope,$location,$controller,address
         })
     }
 
+    //保存
+    $scope.save=function(){
+        var serviceObject;//服务层对象
+        if($scope.address.id!=null){//如果有ID
+            serviceObject=addressService.update( $scope.address ); //修改
+        }else{
+            serviceObject=addressService.add( $scope.address  );//增加
+        }
+        serviceObject.success(
+            function(response){
+                if(response.success){
+                    //重新查询
+                    $scope.findAddressList();//重新加载
+                }else{
+                    alert(response.message);
+                }
+            }
+        );
+    }
 
-
-});	
+});
