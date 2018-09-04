@@ -24,7 +24,7 @@ public interface PayService {
     /*
     * 根据订单号查询该订单的商品
     * */
-    void findByOutTradeNo(Long outTradeNo,Long totalFee,String orderId);
+    void findByOutTradeNo(Long outTradeNo,Double totalFee,String orderId);
 
     /*
     * 交易成功，更改订单状态

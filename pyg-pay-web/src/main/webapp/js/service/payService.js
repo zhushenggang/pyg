@@ -12,8 +12,8 @@ app.service('payService',function($http){
     }
 
     //生成日志文件
-    this.payLog=function(outTradeNo,totalFee,orderIds,orderId){
-	    return $http.get("../pay/payLog/"+outTradeNo+"/"+totalFee+"/"+orderId);
+    this.payLog=function(out_trade_no,total_fee,orderId){
+	    return $http.get("../pay/payLog/"+out_trade_no+"/"+total_fee+"/"+orderId);
     }
 
 });

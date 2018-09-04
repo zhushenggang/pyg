@@ -38,8 +38,8 @@ app.controller('payController', function ($scope,$location,$controller,payServic
 
             //判断支付状态
             if(data.success){
+                $scope.payLog($scope.out_trade_no,$scope.total_fee,$scope.orderId);
                 location.href="paysuccess.html#?money="+$scope.total_fee;
-                $scope.createLog($scope.out_trade_no,$scope.total_fee,$scope.orderId);
             }else if(data.message=='二维码超时'){
                 //重新生成二维码支付
                 $scope.createQrCode();
@@ -52,8 +52,8 @@ app.controller('payController', function ($scope,$location,$controller,payServic
 
 
     //向后台生成日志文件
-    $scope.payLog =function (outTradeNo,time) {
-        payService.payLog(outTradeNo,time).success(function (data) {
+    $scope.payLog =function (out_trade_no,total_fee,orderId) {
+        payService.payLog(out_trade_no,total_fee,orderId).success(function (data) {
             alert("已生成购买记录日志");
         })
     }

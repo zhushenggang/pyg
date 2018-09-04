@@ -8,13 +8,12 @@ import com.pyg.pay.service.PayService;
 import com.pyg.pojo.TbOrder;
 import com.pyg.pojo.TbOrderExample;
 import com.pyg.pojo.TbPayLog;
-import com.pyg.pojo.TbPayLogExample;
 import com.pyg.utils.HttpClient;
 import com.pyg.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.math.BigDecimal;
+
 import java.util.*;
 
 /**
@@ -170,37 +169,42 @@ public class PayServiceImpl implements PayService {
     * 交易日志
     * */
     @Override
-    public void findByOutTradeNo(Long outTradeNo,Long totalFee,String orderId) {
+    public void findByOutTradeNo(Long outTradeNo,Double totalFee,String orderId) {
         TbPayLog payLog = new TbPayLog();
         //设置支付订单号
         payLog.setOutTradeNo(outTradeNo+"");
         //设置创建日期
-        payLog.setCreateTime(new Date());
+        Date d1 = new Date();
+        payLog.setCreateTime(d1);
         //设置支付金额
-        payLog.setTotalFee(totalFee);
+        payLog.setTotalFee(totalFee.longValue());
         //设置用户ID
         //String username = request.getRemoteUser();
         payLog.setUserId("ZHJ");
         //设置交易号码
-        payLog.setTransactionId(outTradeNo+"".substring(7)+new Random().nextInt(2000000)+"");
+        payLog.setTransactionId(outTradeNo+"");
         //设置完成时间
-        payLog.setPayTime(new Date());
+        Date d2 = new Date();
+        payLog.setPayTime(d2);
         //设置交易状态
         payLog.setTradeState("1");
         //设置编号列表
         TbOrderExample example = new TbOrderExample();
         TbOrderExample.Criteria criteria = example.createCriteria();
         criteria.andStatusEqualTo("2");
+        criteria.andUserIdEqualTo("ZHJ");
         List<TbOrder> tbOrders = orderMapper.selectByExample(example);
 
         ArrayList<String> orderIdList = new ArrayList<>();
         for (TbOrder tbOrder : tbOrders) {
             orderIdList.add(tbOrder.getOrderId()+"");
         }
-        payLog.setOrderList(tbOrders.toString());
+        String s = orderIdList.toString();
+        payLog.setOrderList(s);
         //设置支付类型
 
-        logMapper.insert(payLog);
+        int i = logMapper.insert(payLog);
+        System.out.println(i);
     }
 
     /*
@@ -208,9 +212,12 @@ public class PayServiceImpl implements PayService {
     * */
     @Override
     public void updateStatus(String orderId) {
+        String substring = orderId.substring(1, orderId.length() - 1);
+        long l = Long.parseLong(substring);
         TbOrder order = new TbOrder();
         order.setStatus("2");
-        order.setOrderId(Long.parseLong(orderId));
-        orderMapper.updateByPrimaryKeySelective(order);
+        order.setOrderId(l);
+        int i = orderMapper.updateByPrimaryKeySelective(order);
+        System.out.println(i);
     }
 }

@@ -52,9 +52,9 @@ public class PayController {
      * 返回值：PygResult
      */
     @RequestMapping("queryPayStatus/{out_trade_no}/{orderId}")
-    public PygResult queryPayStatus(@PathVariable String out_trade_no,@PathVariable String orderId) {
+    public PygResult queryPayStatus(@PathVariable String out_trade_no,@PathVariable String orderId) throws InterruptedException {
 
-        try {
+     /*   try {
             //设置5分钟超时，重新生成二维码
             int x=0;
             while (true) {
@@ -88,10 +88,11 @@ public class PayController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return new PygResult(false, "支付失败");
-        }
-
-
+            return new PygResult(true, "支付失败");
+        }*/
+        Thread.sleep(8000);
+        payService.updateStatus(orderId);
+        return new PygResult(true, "支付成功");
     }
 
 
@@ -99,11 +100,11 @@ public class PayController {
     /*
     * 生成日志文件
     * */
-    @RequestMapping("payLog/{outTradeNo}/{totalFee}/{orderId}")
-    public void payLog(@PathVariable Long outTradeNo,@PathVariable Long totalFee ,@PathVariable String orderId){
+    @RequestMapping("payLog/{out_trade_no}/{total_fee}/{orderId}")
+    public void payLog(@PathVariable Long out_trade_no,@PathVariable Double total_fee ,@PathVariable String orderId){
 
         //设置订单编号列表
-        payService.findByOutTradeNo(outTradeNo,totalFee,orderId);
+        payService.findByOutTradeNo(out_trade_no,total_fee,orderId);
 
     }
 

@@ -61,7 +61,7 @@
 			<h4>全部商品<span>11</span></h4>
 			<div class="cart-main">
 				<div class="yui3-g cart-th">
-					<div class="yui3-u-1-4"><input type="checkbox" name="" id="" value="" ng-click="All(selectAll)"/> 全部</div>
+					<div class="yui3-u-1-4"><input type="checkbox"  name="" id="" value="" /> 全部</div>
 					<div class="yui3-u-1-4">商品</div>
 					<div class="yui3-u-1-8">单价（元）</div>
 					<div class="yui3-u-1-8">数量</div>
@@ -77,7 +77,7 @@
 						<div class="cart-list" ng-repeat="orderItem in cart.orderItemList">
 							<ul class="goods-list yui3-g">
 								<li class="yui3-u-1-24">
-									<input  type="checkbox"  name="" id="" value="" ng-click="updateSelection($event,orderItem.itemId)"/>
+									<input  type="checkbox"     name="" id="" value="" ng-click="updateSelection($event,orderItem.itemId);"/>
 								</li>
 								<li class="yui3-u-11-24">
 									<div class="good-item">

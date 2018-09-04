@@ -35,15 +35,24 @@ app.controller('cartController', function ($scope,$controller,cartService) {
             alert("请选择需要结算的商品");
         }
     }
-/*
-    $scope.selectAll=true;
-    $scope.all = function () {
-        $scope.all=function (m) {
-            for (var i =0;i<$scope)
+
+  /*  $scope.All = function ($event) {
+        //判断是否checkbox选中事件
+        if ($event.target.checked){
+            $scope.sel2 = "choosed";
+        }else {
+            $scope.sel2 ="unchoosed";
         }
     }
-*/
 
+    $scope.All2 =function ($event) {
+        //判断是否checkbox选中事件
+        if ($event.target.checked){
+
+        }else {
+            $scope.sel = "unchoosed";
+        }
+    }*/
 
 
 });	
