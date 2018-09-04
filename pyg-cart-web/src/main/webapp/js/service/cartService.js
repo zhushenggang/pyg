@@ -32,5 +32,9 @@ app.service('cartService', function ($http) {
 
     }
 
+    this.closeFee = function (ids) {
+        return $http.get("../cart/findSelectItem/"+ids);
+    }
+
 
 });

@@ -1,5 +1,5 @@
 //控制层
-app.controller('payController', function ($scope,$location,payService) {
+app.controller('payController', function ($scope,$location,$controller,payService) {
 
     //生成支付二维码
     $scope.createQrCode = function () {
@@ -8,22 +8,24 @@ app.controller('payController', function ($scope,$location,payService) {
             //获取二维码支付链接
             var code_url = data.code_url;
             //获取支付金额
-            $scope.total_fee = (data.total_fee/100).toFixed(2);
+            $scope.total_fee = data.total_fee;
             $scope.out_trade_no = data.out_trade_no;
 
             //使用插件qrious生成二维码
             var qr = new QRious({
                 element:document.getElementById('qrCode'),
-                size:300,
+                size:200,
                 background:'white',
                 foreground:'black',
                 level:'H',
-                value:code_url
+                value:"https://api.mch.weixin.qq.com/pay/orderquery"
             });
+            //接受静态页面参数
+            $scope.orderId = $location.search()['orderId'];
 
             //查询二维码状态
             //及时检测二维码是否支付成功，或者是否失败
-           $scope.queryPayStatus();
+            $scope.queryPayStatus();
 
 
         })
@@ -32,9 +34,11 @@ app.controller('payController', function ($scope,$location,payService) {
     };
 
     $scope.queryPayStatus = function () {
-        payService.queryPayStatus($scope.out_trade_no).success(function (data) {
+        payService.queryPayStatus($scope.out_trade_no,$scope.orderId).success(function (data) {
+
             //判断支付状态
             if(data.success){
+                $scope.payLog($scope.out_trade_no,$scope.total_fee,$scope.orderId);
                 location.href="paysuccess.html#?money="+$scope.total_fee;
             }else if(data.message=='二维码超时'){
                 //重新生成二维码支付
@@ -46,7 +50,15 @@ app.controller('payController', function ($scope,$location,payService) {
         })
     }
 
-    //获取短信验证码
+
+    //向后台生成日志文件
+    $scope.payLog =function (out_trade_no,total_fee,orderId) {
+        payService.payLog(out_trade_no,total_fee,orderId).success(function (data) {
+            alert("已生成购买记录日志");
+        })
+    }
+
+    // 获取短信验证码
     $scope.getSmsCode = function () {
         //调用服务层方法
         //判断手机不能为空
@@ -69,7 +81,7 @@ app.controller('payController', function ($scope,$location,payService) {
     //获取用户名
     $scope.loadUserInfo = function () {
         loginService.loadUserInfo().success(function (data) {
-            $scope.username = data.loginName;
+            $scope.username = "ZHJ";
         })
     };
 
@@ -78,4 +90,4 @@ app.controller('payController', function ($scope,$location,payService) {
         $scope.payMomey = $location.search()["money"];
     }
 
-});	
+});

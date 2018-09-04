@@ -125,7 +125,8 @@ public class AddressController {
 	@RequestMapping("findAddressList")
 	public List<TbAddress> findAddressList(HttpServletRequest request){
 		//获取当前用户登录名
-		String username = request.getRemoteUser();
+		//String username = request.getRemoteUser();
+		String username = "lijialong";
 		//调用服务层方法查询当前用户购物地址
 		List<TbAddress> addList = addressService.findAddressList(username);
 

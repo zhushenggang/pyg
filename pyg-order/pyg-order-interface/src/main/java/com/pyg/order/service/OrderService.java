@@ -1,4 +1,5 @@
 package com.pyg.order.service;
+import java.util.ArrayList;
 import java.util.List;
 import com.pyg.pojo.TbOrder;
 
@@ -64,5 +65,5 @@ public interface OrderService {
 	 * 需求：提交订单
 	 * 参数：OrderInfo
 	 */
-    void submitOrder(OrderInfo orderInfo,List<Cart> redisCartList);
+    ArrayList<Long> submitOrder(OrderInfo orderInfo, List<Cart> redisCartList);
 }

@@ -7,11 +7,14 @@ import com.pyg.pojo.TbItem;
 import com.pyg.pojo.TbOrderItem;
 import com.pyg.vo.Cart;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by on 2018/8/26.
@@ -179,6 +182,47 @@ public class CartServiceImpl implements CartService {
 
 
         return cartList;
+    }
+    /*
+    * 查询选中的商品信息
+    * */
+    @Override
+    public List<Cart> findSelectItem(Long[] ids) {
+        BoundHashOperations redis_cart = redisTemplate.boundHashOps("redis_cart");
+
+        List<Cart> list = new ArrayList<>();
+        List<TbOrderItem> orderlist = new LinkedList<>();
+        Cart c = new Cart();
+        //获得redis中的所有键
+        Set<String> keys = redis_cart.keys();
+        //遍历出所有的Cart集合
+        for (String key : keys) {
+            if (key.equals("ZHJ")){
+                List<Cart> cartList = (List<Cart>) redis_cart.get(key);
+                //取出cartList集合中的所有Cart对象
+                for (Cart cart : cartList) {
+                    List<TbOrderItem> orderItemList = cart.getOrderItemList();
+                    //获得商家订单数据
+                    for (TbOrderItem orderItem : orderItemList) {
+                        //获得SKU的ID
+                        String itemId = orderItem.getItemId()+"";
+                        //遍历用户传进来的itemId
+                        for (Long id : ids) {
+                            if ((id+"").equals(itemId)){
+                                orderlist.add(orderItem);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //组装选中购物车数据
+        c.setOrderItemList(orderlist);
+        list.add(c);
+        return list;
+
+
     }
 
     /**

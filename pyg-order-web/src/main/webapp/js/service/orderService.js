@@ -2,8 +2,8 @@
 app.service('orderService',function($http){
 	    	
 	//读取列表数据绑定到表单中
-	this.findOrderCartList=function(){
-		return $http.get('../order/findOrderCartList');
+	this.findOrderCartList=function(ids){
+		return $http.get('../order/findOrderCartList/'+ids);
 	}
 
     //计算购物车列表中总价格，总数量
