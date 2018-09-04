@@ -89,6 +89,7 @@ app.controller('userController', function ($scope,loginService
     $scope.uploadFile = function () {
         uploadService.uploadFile().success(function (data) {
             if(data.success){
+                $scope.entity = {};
                 $scope.entity.headPic = data.message;
             }else{
                 alert(data.message);
@@ -131,6 +132,62 @@ app.controller('userController', function ($scope,loginService
         userService.changepwd($scope.oldpwd,$scope.newpwd).success(function (data) {
             if(data.success){
                 location.href="/logout/cas";
+            }else{
+                alert(data.message);
+            }
+        })
+    }
+    
+    $scope.changeMobile = function () {
+        if($scope.mobileNum == null || $scope.mobileNum == ""){
+            alert("手机号码不能为空");
+            return;
+        }
+        userService.changeMobile($scope.mobileNum).success(function (data) {
+            if(data.success){
+                alert(data.message);
+            }else{
+                alert(data.message);
+            }
+        })
+    }
+
+    $scope.checkCode = function () {
+        if($scope.phoneCode == null || $scope.phoneCode == ""){
+            alert("验证码不能为空");
+            return;
+        }
+        userService.checkCode($scope.phoneCode,$scope.mobileNum).success(function (data) {
+            if(data.success){
+                alert(data.message);
+            }else{
+                alert(data.message);
+            }
+        })
+    }
+
+    $scope.sendCodeToNewPhone = function () {
+        if($scope.newPhoneNum == null || $scope.newPhoneNum == ""){
+            alert("手机号码不能为空");
+            return;
+        }
+        userService.sendCodeToNewPhone($scope.newPhoneNum).success(function (data) {
+            if(data.success){
+                alert(data.message);
+            }else{
+                alert(data.message);
+            }
+        })
+    }
+
+    $scope.newPhoneCodeCheck = function () {
+        if($scope.newPhoneCode == null || $scope.newPhoneCode == ""){
+            alert("验证码不能为空");
+            return;
+        }
+        userService.newPhoneCodeCheck($scope.newPhoneCode,$scope.newPhoneNum).success(function (data) {
+            if(data.success){
+                alert(data.message);
             }else{
                 alert(data.message);
             }

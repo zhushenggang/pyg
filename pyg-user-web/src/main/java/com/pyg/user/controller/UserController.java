@@ -2,9 +2,6 @@ package com.pyg.user.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pyg.order.service.AddressService;
-import com.pyg.pojo.TbAreas;
-import com.pyg.pojo.TbCities;
-import com.pyg.pojo.TbProvinces;
 import com.pyg.pojo.TbOrder;
 import com.pyg.pojo.TbUser;
 import com.pyg.user.service.UserService;
@@ -17,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 /**
  * controller
@@ -160,5 +158,66 @@ public class UserController {
 			return new PygResult(false,"发送失败");
 		}
 	}
-	
+
+    /**
+     * 修改密码
+     * @param oldpwd
+     * @param newpwd
+     * @param request
+     * @return
+     */
+	@RequestMapping("/changepwd/{oldpwd}/{newpwd}")
+    public PygResult changepwd(@PathVariable String oldpwd, @PathVariable String newpwd, HttpServletRequest request){
+        PygResult pygResult = null;
+        try {
+            String userName = request.getRemoteUser();
+            pygResult = userService.changepwd(userName, oldpwd, newpwd);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new PygResult(false,"修改失败");
+        }
+        return pygResult;
+
+    }
+
+    /**
+     * 修改密码
+     * @param mobileNum
+     * @param request
+     * @return
+     */
+    @RequestMapping("/changeMobile/{mobileNum}")
+    public PygResult changeMobile(@PathVariable String mobileNum,HttpServletRequest request){
+        String userName = request.getRemoteUser();
+        return userService.changeMobile(userName,mobileNum);
+    }
+
+    @RequestMapping("/checkCode/{phoneCode}/{mobileNum}")
+    public PygResult checkCode(@PathVariable String phoneCode,@PathVariable String mobileNum){
+        try {
+            //验证验证码是否正确
+            boolean flag = userService.checkMobileCode(mobileNum,phoneCode);
+            if(!flag){
+                return  new PygResult(false,"验证码错误");
+            }
+            return new PygResult(true, "验证码正确");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new PygResult(false, "系统出错");
+        }
+    }
+
+    @RequestMapping("/sendCodeToNewPhone/{newPhoneNum}")
+	public PygResult sendCodeToNewPhone(@PathVariable String newPhoneNum){
+        return userService.sendCodeToNewPhone(newPhoneNum);
+	}
+
+	@RequestMapping("/newPhoneCodeCheck/{newPhoneCode}/{newPhoneNum}")
+    public PygResult newPhoneCodeCheck(@PathVariable String newPhoneCode,
+                                       @PathVariable String newPhoneNum,
+                                       HttpServletRequest request){
+        String userName = request.getRemoteUser();
+        return userService.newPhoneCodeCheck(newPhoneCode,newPhoneNum,userName);
+    }
+
 }

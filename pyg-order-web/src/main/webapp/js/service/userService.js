@@ -1,4 +1,4 @@
-//服务层
+//服务层newPhoneNum
 app.service('userService',function($http){
 
 	//用户注册
@@ -9,6 +9,7 @@ app.service('userService',function($http){
 	this.getSmsCode = function (phone) {
         return $http.get("../user/getSmsCode/"+phone);
     }
+
 
 
 

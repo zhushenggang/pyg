@@ -79,4 +79,12 @@ public interface UserService {
     PygResult changepwd(String username,String oldpwd, String newpwd);
 
 	List<TbOrder> findOrderList(String name);
+
+    PygResult changeMobile(String userName, String mobileNum);
+
+	boolean checkMobileCode(String mobileNum, String phoneCode);
+
+    PygResult sendCodeToNewPhone(String newPhoneNum);
+
+    PygResult newPhoneCodeCheck(String newPhoneCode, String newPhoneNum, String userName);
 }

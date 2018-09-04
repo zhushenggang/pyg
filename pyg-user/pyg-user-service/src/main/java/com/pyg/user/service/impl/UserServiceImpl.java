@@ -251,6 +251,124 @@ public class UserServiceImpl implements UserService {
 		return orderList;
 	}
 
+	/**
+	 * 检查手机号码是不是数据库里面的,并且发送消息给mq,让mq去发送短息
+	 * @param userName
+	 * @param mobileNum
+	 * @return
+	 */
+    @Override
+    public PygResult changeMobile(String userName, String mobileNum) {
+	    TbUserExample example = new TbUserExample();
+        Criteria criteria = example.createCriteria();
+        criteria.andUsernameEqualTo(userName);
+
+
+        List<TbUser> tbUsers = userMapper.selectByExample(example);
+        for (TbUser tbUser : tbUsers) {
+            if (!tbUser.getPhone().equals(mobileNum)){
+                return new PygResult(false,"手机号码错误");
+            };
+        }
+        try {
+            //1,生成6位数验证码
+            //0.2343243243243
+            long code = (long)(Math.random()*1000000);
+            // 2,把验证码存储到redis服务器
+            redisTemplate.boundHashOps("mobile").put(mobileNum,code);
+            //3，设置过期时间 5分钟
+            redisTemplate.boundHashOps("mobile").expire(5, TimeUnit.MINUTES);
+
+            //创建map,封装发送数据
+            Map<String,String> maps = new HashMap<>();
+            //手机号
+            maps.put("phone",mobileNum);
+            //处理编码
+            String sname = new String(sign_name.getBytes("ISO-8859-1"),"UTF-8");
+
+            //签名
+            maps.put("sign_name",sname);
+            //模板code
+            maps.put("template_code",template_code);
+            //验证码
+            maps.put("code",code+"");
+
+            //4,发送消息
+            jmsTemplate.convertAndSend("sms",maps);
+            return new PygResult(true,"发送成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new PygResult(false,"发送失败");
+        }
+
+    }
+
+	@Override
+	public boolean checkMobileCode(String mobileNum, String phoneCode) {
+        long  mobile = (long) redisTemplate.boundHashOps("mobile").get(mobileNum);
+        if(phoneCode.equals(mobile + "")){
+            return  true;
+        }
+        return false;
+	}
+
+	@Override
+	public PygResult sendCodeToNewPhone(String newPhoneNum) {
+		try {
+			//1,生成6位数验证码
+			//0.2343243243243
+			long code = (long)(Math.random()*1000000);
+			// 2,把验证码存储到redis服务器
+			redisTemplate.boundHashOps("mobile").put(newPhoneNum,code);
+			//3，设置过期时间 5分钟
+			redisTemplate.boundHashOps("mobile").expire(5, TimeUnit.MINUTES);
+
+			//创建map,封装发送数据
+			Map<String,String> maps = new HashMap<>();
+			//手机号
+			maps.put("phone",newPhoneNum);
+			//处理编码
+			String sname = new String(sign_name.getBytes("ISO-8859-1"),"UTF-8");
+
+			//签名
+			maps.put("sign_name",sname);
+			//模板code
+			maps.put("template_code",template_code);
+			//验证码
+			maps.put("code",code+"");
+
+			//4,发送消息
+			jmsTemplate.convertAndSend("sms",maps);
+			return new PygResult(true,"发送成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new PygResult(false,"发送失败");
+		}
+
+	}
+
+	@Override
+	public PygResult newPhoneCodeCheck(String newPhoneCode, String newPhoneNum, String userName) {
+		long  mobile = (long) redisTemplate.boundHashOps("mobile").get(newPhoneNum);
+		if(newPhoneCode.equals(mobile + "")){
+            try {
+                TbUserExample example = new TbUserExample();
+                Criteria criteria = example.createCriteria();
+                criteria.andUsernameEqualTo(newPhoneNum);
+                TbUser user = new TbUser();
+                user.setPhone(userName);
+                userMapper.updateByExampleSelective(user,example);
+                return new PygResult(true,"修改成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new PygResult(false,"修改失败");
+            }
+        }else{
+		    return new PygResult(false,"验证码错误");
+        }
+
+	}
+
 	@Override
 	public void saveUserInfo(TbUser user) {
 

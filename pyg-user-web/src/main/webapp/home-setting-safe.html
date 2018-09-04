@@ -15,7 +15,7 @@
 	<script src="js/service/loginService.js"></script>
 	<script src="js/service/addressService.js"></script>
 	<script src="js/service/uploadService.js"></script>
-	<script src="js/userService.js"></script>
+	<script src="js/service/userService.js"></script>
 	<script src="js/controller/userController.js"></script>
 </head>
 
@@ -390,7 +390,7 @@ $(function(){
                                      <div class="control-group">
                                         <label for="inputcode" class="control-label">验证码：</label>
                                         <div class="controls">
-                                            <input name="inputcode" type="text" id="inputcode">
+                                            <input name="inputcode" type="text" id="inputcode" ng-model="phoneCode">
                                         </div>
                                         <div class="controls">
                                             验证码
@@ -399,14 +399,14 @@ $(function(){
                                     <div class="control-group">
                                         <label for="inputRepassword" class="control-label">请输入手机号：</label>
                                         <div class="controls">
-                                            <input name="msgcode" type="text" id="msgcode">
+                                            <input name="msgcode" type="text" id="msgcode" ng-model="mobileNum">
                                         </div>
                                         <div class="controls">
                                             <button class="sui-btn btn-info" ng-click="changeMobile()">发送</button>
                                         </div>
                                     </div>
                                     <div class="control-group next-btn">
-                                        <a class="sui-btn btn-primary" href="home-setting-address-phone.html">下一步</a>
+                                        <a class="sui-btn btn-primary" href="home-setting-address-phone.html" ng-click="checkCode()">下一步</a>
                                     </div>
                                 </form>
                             </div>
